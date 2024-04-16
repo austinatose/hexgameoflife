@@ -30,7 +30,7 @@ function makeGrid() {
   count = 0;
   for(i = 0; i < height; i += 80 / 2.3) { // arbitrary number
     grid.push([]);
-    for(j = 0; j < width; j += 80 * 1.5) {
+    for(j = 0; j < width; j += 80 * 1.5) { // x axis offset, this is a nicer number
       cell = new Cell(j + 80 * (count % 2==0) * 0.75, i);
       grid[grid.length-1].push(cell);
     }
@@ -42,10 +42,10 @@ function drawGrid() {
   for (i = 0; i < grid.length; i++) {
     for (j = 0; j < grid[i].length; j++) {
       grid[i][j].show();
-      if (!play && debug) grid[i][j].displayNum(i, j, countActiveNeighbors(i, j));
+      if (!play && debug) grid[i][j].displayNum(i, j, countActiveNeighbors(i, j)); // debug
       if (!play && mouseIsPressed && dist(grid[i][j].x, grid[i][j].y, mouseX, mouseY) < 40 && mouseStateIsHighlighted == false) {
         grid[i][j].active = !grid[i][j].active;
-        mouseStateIsHighlighted = !mouseStateIsHighlighted;
+        mouseStateIsHighlighted = !mouseStateIsHighlighted; // this workaround is required to prevent the mouse from constantly toggling the cell
       }
     }
   }
@@ -53,7 +53,7 @@ function drawGrid() {
 
 function countActiveNeighbors(x, y) {
   let count = 0
-  if (x % 2 == 0) {
+  if (x % 2 == 0) { // due to the hexagonal grid, the neighbor indexes are different depending on even or odd rows
     if (x > 0 && grid[x - 1][y].active) count++;
     if (x < 24 && grid[x + 1][y].active) count++;
     if (x > 1 && grid[x - 2][y].active) count++;
@@ -72,12 +72,13 @@ function countActiveNeighbors(x, y) {
 }
 
 function updateGrid() {
-  // let gridCopy = structuredClone(grid);
+  // let gridCopy = structuredClone(grid); // i tried this to duplicate the grid but it didn't work
   let gridCopy = [];
   // console.log(grid);
   for (i = 0; i < grid.length; i++) {
     gridCopy.push([]);
     for (j = 0; j < grid[i].length; j++) {
+      // rules are implemented below
       if (grid[i][j].active) {
         if (countActiveNeighbors(i, j) < 3 || countActiveNeighbors(i, j) > 4) {
           gridCopy[i].push(false);

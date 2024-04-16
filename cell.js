@@ -18,7 +18,7 @@ class Cell {
     endShape(CLOSE);
   }
 
-  displayNum(a, b, c) {
+  displayNum(a, b, c) { // the debug thing
     push();
     if (this.active) fill(255);
     else fill(0);
